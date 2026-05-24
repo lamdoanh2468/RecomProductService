@@ -1,4 +1,4 @@
-package com.furniro.AuthService.dto.API;
+package com.furniro.RecomProductService.dto.API;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
