@@ -15,9 +15,9 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Auth Service")
                         .version("1.0")
-                        .description("Auth Service"))
+                        .description("Recommend Product Service"))
                 .addServersItem(new Server()
-                        .url("/api/v1/furniro/auth-service")
+                        .url("/api/v1/furniro/recom-product-service")
                         .description("Gateway Server"));
     }
 }

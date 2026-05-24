@@ -15,7 +15,7 @@ public class RecommendController {
 
 
     @GetMapping("/{productID}/similar")
-    public ResponseEntity<AType> getRecommendProducts(@PathVariable Integer productID) {
+    public ResponseEntity<AType> getSimilarProducts(@PathVariable Integer productID) {
         return recommendService.getSimilarProducts(productID);
     }
 }
