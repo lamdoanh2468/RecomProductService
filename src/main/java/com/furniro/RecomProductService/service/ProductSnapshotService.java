@@ -1,4 +1,4 @@
-package com.furniro.RecomProductService.service.kafka;
+package com.furniro.RecomProductService.service;
 
 import com.furniro.RecomProductService.database.entity.ProductSnapshot;
 import com.furniro.RecomProductService.database.entity.RecomProduct;

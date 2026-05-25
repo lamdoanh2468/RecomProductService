@@ -1,6 +1,7 @@
 package com.furniro.RecomProductService.service.kafka;
 
 
+import com.furniro.RecomProductService.service.ProductSnapshotService;
 import com.furniro.RecomProductService.service.event.ProductSnapshotEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +17,8 @@ public class ProductSnapshotConsumer {
     private final ProductSnapshotService productSnapshotService;
 
     @KafkaListener(
-            topics = "${app.kafka.topic.product-snapshot}",
-            groupId = "${spring.kafka.consumer.group-id}"
+            topics = "product.snapshot.upserted",
+            groupId = "recommend-product"
     )
     public void consume(ProductSnapshotEvent event) {
         log.info("Received product snapshot event. productID={}, name={}",
