@@ -33,6 +33,12 @@ public class KafkaConfig {
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JacksonJsonDeserializer.class);
         configProps.put("spring.json.trusted.packages", "*");
+        configProps.put("spring.json.use.type.headers", false);
+
+        configProps.put(
+                "spring.json.value.default.type",
+                "com.furniro.RecomProductService.service.event.ProductViewedEvent"
+        );
         return new DefaultKafkaConsumerFactory<>(configProps);
     }
 

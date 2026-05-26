@@ -10,6 +10,9 @@ import java.util.*;
 
 public interface RecomProductRepository extends JpaRepository<RecomProduct, Integer> {
 
+    List<RecomProduct> findBySourceProductIDAndActiveTrueOrderByScoreDesc(
+            Integer sourceProductID
+    );
     List<RecomProduct> findTop8BySourceProductIDAndActiveTrueOrderByScoreDesc(
             Integer sourceProductID
     );
