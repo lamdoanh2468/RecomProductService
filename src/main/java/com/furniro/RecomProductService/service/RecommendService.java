@@ -1,9 +1,9 @@
 package com.furniro.RecomProductService.service;
 
 import com.furniro.RecomProductService.database.entity.ProductViewLog;
-import com.furniro.RecomProductService.database.entity.RecomProduct;
 import com.furniro.RecomProductService.database.repository.ProductViewLogRepository;
 import com.furniro.RecomProductService.database.repository.RecomProductRepository;
+import com.furniro.RecomProductService.dto.response.RecomProductRes;
 import com.furniro.RecomProductService.service.event.ProductViewedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,12 +31,15 @@ public class RecommendService {
         productViewLogRepository.save(log);
     }
 
-    public List<RecomProduct> getSimilarProducts(Integer productID) {
-        if (productID == null) {
-            throw new IllegalArgumentException("productID must not be null");
-        }
-
+    public List<RecomProductRes> getRecommendProducts(Integer productID) {
         return recomProductRepository
-                .findBySourceProductIDAndActiveTrueOrderByScoreDesc(productID);
+                .findBySourceProductIDAndActiveTrueOrderByScoreDesc(productID)
+                .stream()
+                .map(recom -> RecomProductRes.builder()
+                        .productID(recom.getRecomProductID())
+                        .score(recom.getScore())
+                        .reason(recom.getReason())
+                        .build())
+                .toList();
     }
 }

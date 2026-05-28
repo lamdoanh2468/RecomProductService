@@ -1,8 +1,7 @@
 package com.furniro.RecomProductService.controller;
 
-import com.furniro.RecomProductService.database.entity.RecomProduct;
-import com.furniro.RecomProductService.dto.API.AType;
 import com.furniro.RecomProductService.dto.API.ApiType;
+import com.furniro.RecomProductService.dto.response.RecomProductRes;
 import com.furniro.RecomProductService.service.RecommendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +20,10 @@ public class RecommendController {
     private final RecommendService recommendService;
 
     @GetMapping("/{productID}")
-    public ResponseEntity<AType> getSimilarProducts(@PathVariable Integer productID) {
-        List<RecomProduct> recomProducts = recommendService.getSimilarProducts(productID);
+    public ResponseEntity<ApiType<List<RecomProductRes>>> getRecommendProducts(
+            @PathVariable Integer productID
+    ) {
+        List<RecomProductRes> recomProducts = recommendService.getRecommendProducts(productID);
 
         return ResponseEntity.ok(
                 ApiType.success(recomProducts)

@@ -1,6 +1,7 @@
 package com.furniro.RecomProductService.service.kafka;
 
 import com.furniro.RecomProductService.database.entity.RecomProduct;
+import com.furniro.RecomProductService.dto.response.RecomProductRes;
 import com.furniro.RecomProductService.service.RecommendService;
 import com.furniro.RecomProductService.service.event.ProductViewedEvent;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +36,8 @@ public class ProductViewedConsumer {
 
             recommendService.handleProductViewed(event);
 
-            List<RecomProduct> similarProducts =
-                    recommendService.getSimilarProducts(event.getProductID());
+            List<RecomProductRes> similarProducts =
+                    recommendService.getRecommendProducts(event.getProductID());
 
             log.info("Found {} similar products for productID={}",
                     similarProducts.size(),
