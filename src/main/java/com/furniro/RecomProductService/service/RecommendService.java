@@ -5,7 +5,9 @@ import com.furniro.RecomProductService.database.repository.ProductViewLogReposit
 import com.furniro.RecomProductService.database.repository.RecomProductRepository;
 import com.furniro.RecomProductService.dto.response.RecomProductRes;
 import com.furniro.RecomProductService.service.event.ProductViewedEvent;
+import com.furniro.RecomProductService.utils.RecomReason;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,10 +32,24 @@ public class RecommendService {
 
         productViewLogRepository.save(log);
     }
+    public List<RecomProductRes> getMostViewedProducts(Integer productID) {
+        return productViewLogRepository
+                .findMostViewedProductIDsExceptCurrentProduct(
+                        productID,
+                        PageRequest.of(0, 8)
+                )
+                .stream()
+                .map(recomProductID -> RecomProductRes.builder()
+                        .productID(recomProductID)
+                        .score(0.0)
+                        .reason(RecomReason.MOST_VIEWED)
+                        .build())
+                .toList();
+    }
 
     public List<RecomProductRes> getRecommendProducts(Integer productID) {
-        return recomProductRepository
-                .findBySourceProductIDAndActiveTrueOrderByScoreDesc(productID)
+        List<RecomProductRes> productRecom = recomProductRepository
+                .findTop8BySourceProductIDAndActiveTrueOrderByScoreDesc(productID)
                 .stream()
                 .map(recom -> RecomProductRes.builder()
                         .productID(recom.getRecomProductID())
@@ -41,5 +57,10 @@ public class RecommendService {
                         .reason(recom.getReason())
                         .build())
                 .toList();
+
+        if (!productRecom.isEmpty()) {
+            return productRecom;
+        }
+        return getMostViewedProducts(productID);
     }
 }

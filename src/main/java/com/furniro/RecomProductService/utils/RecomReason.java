@@ -3,8 +3,9 @@ package com.furniro.RecomProductService.utils;
 public enum RecomReason {
     SAME_CATEGORY,
     SAME_BRAND,
-    SAME_PRICE_RANGE,
-    SAME_STYLE,
-    MANUAL,
-    POPULAR
+    SIMILAR_PRICE,
+    SAME_COLOR,
+    SAME_SIZE,
+    SAME_MATERIAL,
+    MOST_VIEWED
 }
