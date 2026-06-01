@@ -4,6 +4,7 @@ import com.furniro.RecomProductService.database.entity.RecomProduct;
 import com.furniro.RecomProductService.dto.response.RecomProductRes;
 import com.furniro.RecomProductService.service.RecommendService;
 import com.furniro.RecomProductService.service.event.ProductViewedEvent;
+import com.furniro.RecomProductService.utils.RecomReason;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -23,29 +24,41 @@ public class ProductViewedConsumer {
             groupId = "recommend-product"
     )
     public void consume(ProductViewedEvent event) {
+        Integer productID = event != null ? event.getProductID() : null;
+
         try {
-            if (event == null || event.getProductID() == null) {
+            if (productID == null) {
                 log.warn("Invalid product viewed event: {}", event);
                 return;
             }
 
-            log.info("Received product viewed event: productID={}, viewedAt={}",
-                    event.getProductID(),
-                    event.getViewedAt()
+            RecomReason reason = event.getReason();
+
+            log.info("Received product viewed event: productID={}, viewedAt={}, reason={}",
+                    productID,
+                    event.getViewedAt(),
+                    reason
             );
 
             recommendService.handleProductViewed(event);
 
-            List<RecomProductRes> similarProducts =
-                    recommendService.getRecommendProducts(event.getProductID());
+            List<RecomProductRes> similarProducts;
 
-            log.info("Found {} similar products for productID={}",
+            if (reason != null) {
+                similarProducts = recommendService.getRecommendProducts(productID, reason);
+            } else {
+                similarProducts = recommendService.getRecommendProducts(productID);
+            }
+
+            log.info("Found {} similar products for productID={}, reason={}",
                     similarProducts.size(),
-                    event.getProductID()
+                    productID,
+                    reason
             );
+
         } catch (Exception ex) {
             log.error("Failed to handle product viewed event. productID={}",
-                    event.getProductID(),
+                    productID,
                     ex
             );
         }
