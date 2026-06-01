@@ -46,8 +46,27 @@ public class RecommendService {
                         .build())
                 .toList();
     }
-
     public List<RecomProductRes> getRecommendProducts(Integer productID) {
+        return getRecommendProducts(productID, null);
+    }
+
+    public List<RecomProductRes> getRecommendProducts(Integer productID, RecomReason reason) {
+        if (reason == RecomReason.MOST_VIEWED) {
+            return getMostViewedProducts(productID);
+        }
+
+        if (reason != null) {
+            return recomProductRepository
+                    .findTop8BySourceProductIDAndReasonAndActiveTrueOrderByScoreDesc(productID, reason)
+                    .stream()
+                    .map(recom -> RecomProductRes.builder()
+                            .productID(recom.getRecomProductID())
+                            .score(recom.getScore())
+                            .reason(recom.getReason())
+                            .build())
+                    .toList();
+        }
+
         List<RecomProductRes> productRecom = recomProductRepository
                 .findTop8BySourceProductIDAndActiveTrueOrderByScoreDesc(productID)
                 .stream()
@@ -61,6 +80,7 @@ public class RecommendService {
         if (!productRecom.isEmpty()) {
             return productRecom;
         }
+
         return getMostViewedProducts(productID);
     }
 }

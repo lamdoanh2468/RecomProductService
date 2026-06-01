@@ -3,12 +3,10 @@ package com.furniro.RecomProductService.controller;
 import com.furniro.RecomProductService.dto.API.ApiType;
 import com.furniro.RecomProductService.dto.response.RecomProductRes;
 import com.furniro.RecomProductService.service.RecommendService;
+import com.furniro.RecomProductService.utils.RecomReason;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,9 +19,9 @@ public class RecommendController {
 
     @GetMapping("/{productID}")
     public ResponseEntity<ApiType<List<RecomProductRes>>> getRecommendProducts(
-            @PathVariable Integer productID
+            @PathVariable Integer productID, @RequestParam (required = false) RecomReason reason
     ) {
-        List<RecomProductRes> recomProducts = recommendService.getRecommendProducts(productID);
+        List<RecomProductRes> recomProducts = recommendService.getRecommendProducts(productID,reason);
 
         return ResponseEntity.ok(
                 ApiType.success(recomProducts)
